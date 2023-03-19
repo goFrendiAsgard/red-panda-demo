@@ -4,12 +4,13 @@ from zrb import (
 )
 import os
 
-CONSUMER_COUNT_PER_GROUP = 3
+KAFKA_BROKERS = 'localhost:19092'
+CONSUMER_COUNT_PER_GROUP = 2
 CONSUMER_GROUPS = ['warehouse', 'finance']
 PRODUCER_KEYS = ['web', 'app']
 TOPIC = 'payment'
 TOPIC_PARTITION = 3
-TOPIC_REPLICATION = 2
+TOPIC_REPLICATION = 3
 
 current_dir = os.path.dirname(__file__)
 client_dir = os.path.join(current_dir, 'src', 'go-client')
@@ -50,7 +51,7 @@ for consumer_group in CONSUMER_GROUPS:
             ],
             envs=[
                 Env(name='APP_MODE', default='consumer'),
-                Env(name='APP_KAFKA_BROKERS', default='localhost:19092'),
+                Env(name='APP_KAFKA_BROKERS', default=KAFKA_BROKERS),
                 Env(name='APP_KAFKA_TOPIC', default=TOPIC),
                 Env(
                     name='APP_KAFKA_TOPIC_REPLICATION',
@@ -81,7 +82,7 @@ for producer_key in PRODUCER_KEYS:
         ],
         envs=[
             Env(name='APP_MODE', default='producer'),
-            Env(name='APP_KAFKA_BROKERS', default='localhost:19092'),
+            Env(name='APP_KAFKA_BROKERS', default=KAFKA_BROKERS),
             Env(name='APP_KAFKA_TOPIC', default=TOPIC),
             Env(
                 name='APP_KAFKA_TOPIC_REPLICATION',

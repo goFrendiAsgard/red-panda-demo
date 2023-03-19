@@ -45,7 +45,19 @@ func createTopic(brokers []string, topic string, topicPartition int, topicReplic
 	defer admin.Close()
 
 	ctx := context.Background()
-	// Create a topic with a single partition and single replica
+
+	metadata, err := admin.Metadata(context.Background())
+	if err != nil {
+		panic(err)
+	}
+	for _, t := range metadata.Topics {
+		if t.Topic == topic {
+			fmt.Printf("Topic already exists: %s", topic)
+			return
+		}
+	}
+
+	// create topic
 	resp, err := admin.CreateTopics(ctx, int32(topicPartition), int16(topicReplication), nil, topic)
 	if err != nil {
 		panic(err)
