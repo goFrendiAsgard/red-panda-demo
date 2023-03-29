@@ -52,7 +52,7 @@ func createTopic(brokers []string, topic string, topicPartition int, topicReplic
 	}
 	for _, t := range metadata.Topics {
 		if t.Topic == topic {
-			fmt.Printf("Topic already exists: %s", topic)
+			fmt.Printf("Topic already exists: %s\n", topic)
 			return
 		}
 	}
@@ -64,9 +64,9 @@ func createTopic(brokers []string, topic string, topicPartition int, topicReplic
 	}
 	for _, ctr := range resp {
 		if ctr.Err != nil {
-			fmt.Printf("Unable to create topic '%s': %s", ctr.Topic, ctr.Err)
+			fmt.Printf("Unable to create topic '%s': %s\n", ctr.Topic, ctr.Err)
 		} else {
-			fmt.Printf("Created topic '%s'", ctr.Topic)
+			fmt.Printf("Created topic '%s'\n", ctr.Topic)
 		}
 	}
 }
@@ -82,6 +82,7 @@ func consume(brokers []string, topic, consumerGroup string) {
 		panic(err)
 	}
 	defer client.Close()
+	fmt.Println("Consuming")
 
 	ctx := context.Background()
 	for {
@@ -96,10 +97,8 @@ func consume(brokers []string, topic, consumerGroup string) {
 		iter := fetches.RecordIter()
 		for !iter.Done() {
 			record := iter.Next()
-			topicInfo := fmt.Sprintf("topic: %s (%d|%d)",
-				record.Topic, record.Partition, record.Offset)
-			messageInfo := fmt.Sprintf("key: %s, Value: %s",
-				record.Key, record.Value)
+			topicInfo := fmt.Sprintf("topic: %s (%d|%d)", record.Topic, record.Partition, record.Offset)
+			messageInfo := fmt.Sprintf("key: %s, Value: %s\n", record.Key, record.Value)
 			fmt.Printf("Message consumed: %s, %s \n", topicInfo, messageInfo)
 		}
 	}
